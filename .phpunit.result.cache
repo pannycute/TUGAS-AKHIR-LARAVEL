@@ -1,0 +1,1 @@
+{"version":1,"defects":{"Tests\\Feature\\PaymentMethodApiTest::it_can_create_a_payment_method":7,"Tests\\Feature\\PaymentMethodApiTest::it_fails_validation_when_method_name_is_missing":7},"times":{"Tests\\Feature\\PaymentMethodApiTest::it_can_create_a_payment_method":7.985,"Tests\\Feature\\PaymentMethodApiTest::it_fails_validation_when_method_name_is_missing":0.009}}
