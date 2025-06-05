@@ -15,7 +15,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    
+
     // Admin only
     Route::middleware('admin')->group(function () {
         Route::apiResource('users', UserController::class);
@@ -25,6 +25,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Public for logged-in users
     Route::apiResource('orders', OrderController::class);
-    Route::apiResource('order-items', OrderItemController::class);
+    Route::apiResource('orderitems', OrderItemController::class);
     Route::apiResource('paymentconfirmations', PaymentConfirmationController::class);
 });

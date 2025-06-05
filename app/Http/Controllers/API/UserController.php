@@ -90,19 +90,32 @@ class UserController extends Controller
         try {
             $user = User::findOrFail($id);
 
+            // Validasi input
             $validated = $request->validate([
-                'name'     => 'required|string|max:255',
-                'email'    => 'required|email|unique:users,email,' . $id . ',user_id',
-                'password' => 'nullable|min:6',
-                'role'     => 'required|in:admin,user',
+                'name'         => 'required|string|max:255',
+                'email'        => 'required|email|unique:users,email,' . $id . ',user_id',
+                'oldPassword'  => 'nullable|required_with:newPassword', // harus ada jika newPassword disediakan
+                'newPassword'  => 'nullable|min:6',
+                'role'         => 'required|in:admin,user',
             ]);
 
-            if ($request->filled('password')) {
-                $validated['password'] = Hash::make($request->password);
-            } else {
-                unset($validated['password']);
+            // Jika newPassword diisi, cek oldPassword
+            if ($request->filled('newPassword')) {
+                if (!Hash::check($request->oldPassword, $user->password)) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Old password is incorrect.'
+                    ], 422);
+                }
+
+                // Update password dengan hash baru
+                $validated['password'] = Hash::make($request->newPassword);
             }
 
+            // Hapus field yang tidak diperlukan sebelum update
+            unset($validated['oldPassword'], $validated['newPassword']);
+
+            // Lakukan update data user
             $user->update($validated);
 
             return response()->json([
@@ -123,8 +136,12 @@ class UserController extends Controller
                 'success' => false,
                 'message' => 'User not found.'
             ], 404);
-        } catch (Exception $e) {
-            return $this->errorResponse($e);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An unexpected error occurred.',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 
