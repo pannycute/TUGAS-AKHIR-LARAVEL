@@ -27,4 +27,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('orders', OrderController::class);
     Route::apiResource('orderitems', OrderItemController::class);
     Route::apiResource('paymentconfirmations', PaymentConfirmationController::class);
+    Route::patch('paymentconfirmations/{id}/confirm', [PaymentConfirmationController::class, 'confirm']);
+    Route::patch('paymentconfirmations/{id}/reject', [PaymentConfirmationController::class, 'reject']);
+    Route::apiResource('products', ProductController::class);
+    Route::apiResource('paymentmethods', PaymentMethodController::class);
 });
